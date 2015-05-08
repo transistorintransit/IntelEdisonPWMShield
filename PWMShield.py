@@ -26,6 +26,11 @@ class PWMShield:
 	__INVRT              = 0x10
 	__OUTDRV             = 0x04
 
+	#Scaling Values
+	frequencyScale = .895
+	frequencyOffset = .325
+	pulseWidthScalingValue = 1.113
+
 	def __init__(self, i2cBus,debugging=False,i2cAddress=0x40):
 		self.i2c = mraa.I2c(i2cBus)
 		self.i2cAddress = i2cAddress
@@ -60,7 +65,7 @@ class PWMShield:
 
 	def setFrequency(self,frequency):
 		"Sets the PWM frequency"
-		self.frequency = frequency*.895  +.325
+		self.frequency = frequency*frequencyScale  + frequencyOffset
 
 		prescaleval = 25000000.0    # 25MHz
 		prescaleval /= 4096.0       # 12-bit
@@ -80,8 +85,7 @@ class PWMShield:
 	def setPulseWidthUs(self, channel, length):
 		if(self.debugging):
 			print('PWM Pulse Length: %i us' %length)
-		scalingValue = 1.113
-		length *= scalingValue
+		length *= pulseWidthScalingValue
 		dataOFF = (4096*length*self.frequency)/1000000
 		dataOFF = int(dataOFF)
 		self.setPWM(channel,0,dataOFF)
