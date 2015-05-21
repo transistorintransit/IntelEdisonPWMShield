@@ -65,7 +65,7 @@ class PWMShield:
 
 	def setFrequency(self,frequency):
 		"Sets the PWM frequency"
-		self.frequency = frequency*frequencyScale  + frequencyOffset
+		self.frequency = frequency*self.frequencyScale  + self.frequencyOffset
 
 		prescaleval = 25000000.0    # 25MHz
 		prescaleval /= 4096.0       # 12-bit
@@ -85,7 +85,7 @@ class PWMShield:
 	def setPulseWidthUs(self, channel, length):
 		if(self.debugging):
 			print('PWM Pulse Length: %i us' %length)
-		length *= pulseWidthScalingValue
+		length *= self.pulseWidthScalingValue
 		dataOFF = (4096*length*self.frequency)/1000000
 		dataOFF = int(dataOFF)
 		self.setPWM(channel,0,dataOFF)
